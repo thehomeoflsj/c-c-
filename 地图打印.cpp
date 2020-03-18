@@ -13,9 +13,13 @@
         1-无错误
         2-正常退出
         3-player越界
-    mov:
+    mov(int):
         0-错误
         1-无错误
+    mov(char):
+        0-错误
+        1-无错误
+        3-越界
 
 
 
@@ -119,37 +123,25 @@ class player
             switch(a)
             {
                 case 1://上↑
-                    if(y-1 < 0)    //越界检测
-                    {
-                        return 0;
-                    }
                     ex(&map[y][x],&map[y-1][x]);
                     y--;
                     break;
+                
                 case 2://右→
-                    if(x + 1 > map_width -1)    //越界检测
-                    {
-                        return 0;
-                    }
                     ex(&map[y][x],&map[y][x+1]);
                     x++;
                     break;
+                
                 case 3://下↓
-                    if(y + 1 > map_height -1)    //越界检测
-                    {
-                        return 0;
-                    }
                     ex(&map[y][x],&map[y+1][x]);
                     y++;
                     break;
+                
                 case 4://左←
-                    if(x - 1 < 0)    //越界检测
-                    {
-                        return 0;
-                    }
                     ex(&map[y][x],&map[y][x-1]);
                     x--;
                     break;
+                
                 default://未知错误接收
                     cerr << "error:未知错误";
                     return 0;
@@ -160,21 +152,39 @@ class player
         {
             if(*"a" == a)    //左
             {
+                if(x - 1 < 0)
+                {
+                    return 3;
+                }
                 return mov(4);
             }
             if(*"d" == a)    //右
             {
+                if(x + 1 > map_width - 1)
+                {
+                    return 3;
+                }
                 return mov(2);
-                
             }
+            
             if(*"w" == a)    //上
             {
+                if(y - 1 < 0)
+                {
+                    return 3;
+                }
                 return mov(1);
             }
+            
             if(*"s" == a)    //下
             {
+                if(y + 1 > map_height - 1)
+                {
+                    return 3;
+                }
                 return mov(3);
             }
+            
             return 0;    //错误
         }
 };
@@ -201,14 +211,14 @@ int main()
         {
             return 2;
         }
-        if(!me.mov(c))
+        if(me.mov(c) == 3)
         {
-            goto error;
+            goto error3;
         };
         printf_map();
     }
     return 0;
-    error:cout << "越界\n";
+    error3:cout << "越界\n";
     return 3;
 }
     
