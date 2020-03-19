@@ -1,6 +1,6 @@
 /*
 更新:添加player越界检测
-预备更新:将检测移动到int mov(char c)
+更新:将检测移动到int mov(char c)
 
 
 */
@@ -30,14 +30,14 @@
 #include<iostream>
 using namespace std;
 
-char egg;
+ char egg;
 
-short map_height = 8;//高
-short map_width = 7;//宽
+ short map0_height = 8;//高
+ short map0_width = 7;//宽
 
 //地图,map[宽][高]
 //1为方块，0为空格,2为人
-short int map[8][7] = 
+ short int map0[8][7] = 
 {
 {1,1,1,1,1,1,1},    //1
 {1,0,0,1,0,0,1},    //2
@@ -52,15 +52,16 @@ short int map[8][7] =
 
 //地图打印函数
 //检测到错误直接退出
-int printf_map()
+int printf_map0()
 {
         int loop1 = 0;//高
         int loop2 = 0;//宽
-        for(loop1 = 0;loop1 < map_height;loop1 ++)    //遍历行(高)
+        for(loop1 = 0;loop1 < map0_height;loop1 ++)    //遍历行(高)
         {
-            for(loop2 = 0;loop2 < map_width;loop2 ++)    //遍历列(宽)
+            cout <<"\t";
+            for(loop2 = 0;loop2 < map0_width;loop2 ++)    //遍历列(宽)
             {
-                switch (map[loop1][loop2])//判断并打印
+                switch (map0[loop1][loop2])//判断并打印
             {
             case 0:
                 cout << " ";
@@ -78,14 +79,14 @@ int printf_map()
                 return 0;
             };
             //一列结束换行
-            if((map_width - 1) == loop2)
+            if((map0_width - 1) == loop2)
             {
                 cout << "\n";
             }
             }
         }
         return 1;
-};
+}
 
 
 //玩家类
@@ -93,11 +94,11 @@ class player
 {
     public:
         //构造函数
-        player(int x1,int y1,int id = 2)//也没写检测🌚
+        player(int x1,int y1,short int id = 2)//也没写检测🌚
         {
             x = x1;//横坐标
             y = y1;//纵坐标
-            map[y][x] = id;//类型
+            map0[y][x] = id;//类型
         }
         int x;
         int y;
@@ -105,7 +106,7 @@ class player
         
         int ex(short int *a,short int* b)    //交换函数(本来应该是私有的)
         {
-            int temp = *a;
+            short int temp = *a;
             *a = *b;
             *b = temp;
             return 1;
@@ -123,22 +124,22 @@ class player
             switch(a)
             {
                 case 1://上↑
-                    ex(&map[y][x],&map[y-1][x]);
+                    ex(&map0[y][x],&map0[y-1][x]);
                     y--;
                     break;
                 
                 case 2://右→
-                    ex(&map[y][x],&map[y][x+1]);
+                    ex(&map0[y][x],&map0[y][x+1]);
                     x++;
                     break;
                 
                 case 3://下↓
-                    ex(&map[y][x],&map[y+1][x]);
+                    ex(&map0[y][x],&map0[y+1][x]);
                     y++;
                     break;
                 
                 case 4://左←
-                    ex(&map[y][x],&map[y][x-1]);
+                    ex(&map0[y][x],&map0[y][x-1]);
                     x--;
                     break;
                 
@@ -152,7 +153,7 @@ class player
         {
             if(*"a" == a)    //左
             {
-                if(x - 1 < 0)
+                if(x - 1 < 0)    //检测
                 {
                     return 3;
                 }
@@ -160,7 +161,7 @@ class player
             }
             if(*"d" == a)    //右
             {
-                if(x + 1 > map_width - 1)
+                if(x + 1 > map0_width - 1)    //检测
                 {
                     return 3;
                 }
@@ -169,7 +170,7 @@ class player
             
             if(*"w" == a)    //上
             {
-                if(y - 1 < 0)
+                if(y - 1 < 0)    //检测
                 {
                     return 3;
                 }
@@ -178,7 +179,7 @@ class player
             
             if(*"s" == a)    //下
             {
-                if(y + 1 > map_height - 1)
+                if(y + 1 > map0_height - 1)    //检测
                 {
                     return 3;
                 }
@@ -191,7 +192,7 @@ class player
 
 void hello()
 {
-    cout << "欢迎来到这里。\n帮助:\nw↑d→s↓a←\n提示:内存会溢出😂\n按c退出\n";
+    cout << "欢迎来到这里。\n帮助:\nw↑d→s↓a←\n按c退出\n";
 }
 
 int main()
@@ -203,7 +204,7 @@ int main()
     hello();
     char c;
     player me = player(3,3);
-    printf_map();
+    printf_map0();
     for(;;)
     {
         cin >> c;
@@ -215,9 +216,8 @@ int main()
         {
             goto error3;
         };
-        printf_map();
+        printf_map0();
     }
-    return 0;
     error3:cout << "越界\n";
     return 3;
 }
